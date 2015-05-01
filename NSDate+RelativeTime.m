@@ -18,6 +18,50 @@ const int WEEK = DAY*7;
 const int MONTH = WEEK*4;
 const int YEAR = DAY*365;
 
+
+-(NSString *)relativeTimeSimple
+{
+    NSDate *currentDate = [NSDate date];
+    int deltaSeconds = fabs(lroundf([self timeIntervalSinceDate:currentDate]));
+    BOOL dateInFuture = ([self timeIntervalSinceDate:currentDate] > 0);
+    
+    if(deltaSeconds < 2*SECOND) {
+        return [self NSDateRelativeTimeLocalizedStrings: @"Now"];
+    } else if(deltaSeconds < MINUTE) {
+        return [self formattedStringForCurrentDate:currentDate count:deltaSeconds past:@"%ds ago" future:@"in %ds"];
+    } else if(deltaSeconds < 1.5*MINUTE) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1m ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1m"];
+    } else if(deltaSeconds < HOUR) {
+        int minutes = (int)lroundf((float)deltaSeconds/(float)MINUTE);
+        return [self formattedStringForCurrentDate:currentDate count:minutes past:@"%dm ago" future:@"in %dm"];
+    } else if(deltaSeconds < 1.5*HOUR) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1h ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1h"];
+    } else if(deltaSeconds < DAY) {
+        int hours = (int)lroundf((float)deltaSeconds/(float)HOUR);
+        return [self formattedStringForCurrentDate:currentDate count:hours past:@"%dh ago" future:@"in %dh"];
+    } else if(deltaSeconds < 1.5*DAY) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1d ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1d"];
+    } else if(deltaSeconds < WEEK) {
+        int days = (int)lroundf((float)deltaSeconds/(float)DAY);
+        return [self formattedStringForCurrentDate:currentDate count:days past:@"%dd ago" future:@"in %dd"];
+    } else if(deltaSeconds < 1.5*WEEK) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1w ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1w"];
+    } else if(deltaSeconds < MONTH) {
+        int weeks = (int)lroundf((float)deltaSeconds/(float)WEEK);
+        return [self formattedStringForCurrentDate:currentDate count:weeks past:@"%dw ago" future:@"in %dw"];
+    } else if(deltaSeconds < 1.5*MONTH) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1mo ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1mo"];
+    } else if(deltaSeconds < YEAR) {
+        int months = (int)lroundf((float)deltaSeconds/(float)MONTH);
+        return [self formattedStringForCurrentDate:currentDate count:months past:@"%dmo ago" future:@"in %dmo"];
+    } else if(deltaSeconds < 1.5*YEAR) {
+        return !dateInFuture ? [self NSDateRelativeTimeLocalizedStrings: @"1yr ago"] : [self NSDateRelativeTimeLocalizedStrings: @"in 1yr"];
+    } else {
+        int years = (int)lroundf((float)deltaSeconds/(float)YEAR);
+        return [self formattedStringForCurrentDate:currentDate count:years past:@"%dyr ago" future:@"in %dyr from now"];
+    }
+}
+
 -(NSString *)relativeTime
 {
     NSDate *currentDate = [NSDate date];

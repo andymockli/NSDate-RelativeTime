@@ -10,6 +10,7 @@
 
 @interface NSDate (RelativeTime)
 
+-(NSString *)relativeTimeSimple;
 -(NSString *)relativeTime;
 
 @end
